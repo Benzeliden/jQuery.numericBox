@@ -1,18 +1,44 @@
 ﻿<!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <title>jQuery numberfield test</title>
+  <title>jQuery numeric box test</title>
   <script src="jquery-2.2.1.min.js"></script>
   <script src="jquery.numericBox.js"></script>
 </head>
 <body>
 
-<input type = "text" id="example" />
+<input type = "text" data-nbox-min="-20" class="numeric" id="txt1" />
+<input type = "text" data-val-range-min="30" class="numeric" id="txt2" />
 
 <script type="text/javascript">
 
 $(function(){
-    $("#example").numericBox();
+	var separator = ',';
+
+	$.fn.numericBox.defaultOptions.separator = separator;
+
+    $(".numeric").numericBox();
+	
+	var $f = $('#txt1');
+	$f.val('12').trigger('input');
+	$f.val('1w2').trigger('input');
+	console.assert($f.val() == '12', 'expected value 12, actual ', $f.val());
+	
+	$f.val('-55').trigger('input');
+	console.assert($f.val() == '-20', 'expected -20, was ', $f.val());
+	
+	$f.numericBox('setOptions', {min : -66});
+	$f.val('-55').trigger('input');
+	console.assert($f.val() == '-55', 'expected -55, was ', $f.val());
+	$f.val('-77').trigger('input');
+	console.assert($f.val() == '-66', 'expected -66, was ', $f.val());
+	
+	var $f2= $('#txt2');
+	$f2.val('-55').trigger('input');
+	console.assert($f2.val() == '30', 'expected 30, was ', $f2.val());
+	
+	$f2.val('2,33');
+	console.assert($f2.val() == '2,33', 'expected 2,33, was ', $f2.val());
 })
 </script>
 </body>
